@@ -10,7 +10,7 @@ Skip most of the Drillbot boss train fight while keeping other parts of the ques
 5. In Steam, add the command line argument `-dev` (right-click on the game in the library -> Properties... -> General -> Launch Options -> In the field under, add `-dev`).
 
 ## Boss instructions
-6. Launch the game. It might take longer to launch.
+6. Launch the game. It might take longer to launch - this is normal.
 7. Load your save, start the quest, and start the train normally.
 8. The Drillbot will not attack you. The only possible way of dying is not running off the platform quickly enough after hammering the Drillbot (see below) and falling into the lava below.
 9. Wait for the animation of the 1st stage to finish. Hammer the Drillbot until it's invulnerable.
