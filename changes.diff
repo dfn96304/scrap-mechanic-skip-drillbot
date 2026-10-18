@@ -1,0 +1,105 @@
+--- DrillbotManager.lua (original)
++++ DrillbotManager.lua (skip)
+@@ -168,28 +168,17 @@
+ 	{ pieceType = DrillbotTrackTypes.Down, id = 1 },
+ }
+ 
++-- Gyro-Core boss shortcut: retain the mandatory wagon exit/entry transitions,
++-- but omit the rollercoaster sections and their falling-bot ambushes.
+ local StageSequences = {
+ 	{
+ 		{ pieceType = DrillbotTrackTypes.EndTransition, id = 1 },
+ 		{ pieceType = DrillbotTrackTypes.End, id = 1 },
+-		{ pieceType = DrillbotTrackTypes.Rollercoaster, id = 1 },
+-		{ pieceType = DrillbotTrackTypes.Rollercoaster, id = 4 },
+-		{ pieceType = DrillbotTrackTypes.Rollercoaster, id = 11 },
+-		{ pieceType = DrillbotTrackTypes.Rollercoaster, id = 5 },
+-		{ pieceType = DrillbotTrackTypes.Rollercoaster, id = 10 },
+ 		{ pieceType = DrillbotTrackTypes.Enter, id = 3 }
+ 	},
+ 	{
+ 		{ pieceType = DrillbotTrackTypes.EndTransition, id = 1 },
+ 		{ pieceType = DrillbotTrackTypes.End, id = 1 },
+-		{ pieceType = DrillbotTrackTypes.Rollercoaster, id = 1 },
+-		{ pieceType = DrillbotTrackTypes.Rollercoaster, id = 4 },
+-		{ pieceType = DrillbotTrackTypes.Rollercoaster, id = 7 }, 
+-		{ pieceType = DrillbotTrackTypes.Rollercoaster, id = 11 },
+-		{ pieceType = DrillbotTrackTypes.Rollercoaster, id = 4 },
+-		{ pieceType = DrillbotTrackTypes.Rollercoaster, id = 5 },
+-		{ pieceType = DrillbotTrackTypes.Rollercoaster, id = 16 },
+-		{ pieceType = DrillbotTrackTypes.Rollercoaster, id = 2 },
+ 		{ pieceType = DrillbotTrackTypes.Enter, id = 1 }
+ 	},
+ 	{
+@@ -1196,6 +1185,8 @@
+ function DrillbotManager.server_onFixedUpdate( self, dt )
+ 	local currentTick = sm.game.getCurrentTick()
+ 
++	-- Gyro-Core boss shortcut: discard queued rollercoaster ambush spawns.
++	self.sv.pendingAmbushNodes = nil
+ 	-- Process pending delayed ambush node activations
+ 	if self.sv.pendingAmbushNodes and #self.sv.pendingAmbushNodes > 0 then
+ 		local remaining = {}
+@@ -1332,8 +1323,25 @@
+ 					self:sv_requestSequence( CoasterOutroSequence1 )
+ 				end
+ 			elseif trackPieceType == DrillbotTrackTypes.Combat then
+-
+-				self:sv_updateCombat()
++				-- Gyro-Core boss shortcut: do not select any attacks or queue enemy sidecarts.
++				-- Clear a previous attack too, in case the modification was enabled mid-fight.
++				self.sv.sideCartRequestQueue = {}
++				if self.sv.bossState.attackState ~= nil then
++					self.sv.bossState.attackState = nil
++					self.sv.bossState.attackStateData = {}
++					self.sv.bossState.attackStartTick = nil
++					self.sv.bossState.targetPlayer = nil
++					self:sv_bumpAttackState()
++					self.sv.bossStateDirty = true
++				end
++
++				-- Pretend all locks on this wagon have been broken, ONCE per cart.
++				-- Reuse the original Combat -> Down transition (and its world-track setup).
++				if self.sv.saved.skipCombatCart ~= self.sv.saved.currentCartIdx then
++					self.sv.saved.skipCombatCart = self.sv.saved.currentCartIdx
++					self.sv.saved.breakLockSignal = true
++					saveAndSync = true
++				end
+ 
+ 				if self.sv.bosstrainWagonPrefabs then -- cannot spawn next wagon until this is loaded
+ 					if self.sv.saved.breakLockSignal then
+@@ -1350,7 +1358,13 @@
+ 					end
+ 				end
+ 			elseif trackPieceType == DrillbotTrackTypes.Down then
+-				self:sv_playRandomFightDialog( "down", DownDialogCooldownTicks )
++				-- Gyro-Core boss shortcut: automatically finish the downed/hammer phase.
++				-- The original flip path advances the wagon and queues the next section.
++				if self.sv.saved.skipDownCart ~= self.sv.saved.currentCartIdx then
++					self.sv.saved.skipDownCart = self.sv.saved.currentCartIdx
++					self.sv.saved.trainFlipSignal = true
++					saveAndSync = true
++				end
+ 				if self.sv.saved.trainFlipSignal then
+ 					if false --[[loopable coaster]] then
+ 						self:sv_requestLoopingState( DrillbotTrackTypes.Rollercoaster ) --set state to assume after sequence
+@@ -1504,7 +1518,8 @@
+ 			if trackPieceType == DrillbotTrackTypes.Cinematic then
+ 				-- request side cart for cinematic
+ 				self:sv_e_requestSideCart( { side = "right", index = 13 } )
+-				self:sv_spawnMechanicsUnits()
++				-- Gyro-Core boss shortcut: no final mechanics-bot spawn/shooting wave.
++				-- Keep the cinematic and exit-location loading intact.
+ 
+ 				for _, name in pairs( DRILLBOT_FIGHT_ACTORS ) do
+ 					QuestActorManager.Sv_NotifyActor( name, "notify.drillbot_exit" )
+@@ -1921,7 +1936,8 @@
+ 				sm.event.sendToPlayer( player, "sv_e_setBlockRespawn", true )
+ 			end
+ 		end
+-		self:sv_spawnEventNodes( "drillbot_fight.start", g_DrillbotWorld.world )
++		-- Gyro-Core boss shortcut: do not spawn the opening enemy wave.
++		-- Companion quest actors are spawned separately by sv_registerCartNodes.
+ 		self.sv.saved.activated = true -- fight start success
+ 		sm.event.sendToWorld( world, "sv_e_activate" )
+ 		self.network:setClientData( self.sv.bossState, 2 )
