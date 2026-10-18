@@ -6,7 +6,7 @@ Skip most of the Drillbot boss train fight while keeping other parts of the ques
 1. Ensure that the game is shut down.
 2. Go into the game files: `[Your Steam download folder]\steamapps\common\Scrap Mechanic\Survival\Scripts\game\managers` (right-click on the game in the library -> Properties... -> Installed Files -> Browse..., then navigate into Survival -> Scripts -> game -> managers).
 3. Inside `\steamapps\common\Scrap Mechanic\Survival\Scripts\game\managers`, rename `DrillbotManager.lua` to `DrillbotManager.lua.original` (in other words, add `.original` at the end) - this will allow you to easily remove the modification in the future.
-4. Download `DrillbotManager.lua` from this repository, and put it into `[Your Steam download folder]\steamapps\common\Scrap Mechanic\Survival\Scripts\game\managers` (replacing the now renamed original).
+4. Download `DrillbotManager.lua` from this repository, and put it into `[Your Steam download folder]\steamapps\common\Scrap Mechanic\Survival\Scripts\game\managers` (replacing the now renamed original). Do not rename this modified file. It must be `DrillbotManager.lua`.
 5. In Steam, add the command line argument `-dev` (right-click on the game in the library -> Properties... -> General -> Launch Options -> In the field under, add `-dev`).
 
 ## Boss instructions
