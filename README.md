@@ -12,11 +12,11 @@ Skip most of the Drillbot boss train fight while keeping other parts of the ques
 ## Boss instructions
 6. Launch the game. It might take longer to launch.
 7. Load your save, start the quest, and start the train normally.
-8. The Drillbot will not attack you. The only possible way of dying is not getting off the platform quickly enough after hammering the Drillbot (see below).
+8. The Drillbot will not attack you. The only possible way of dying is not running off the platform quickly enough after hammering the Drillbot (see below) and falling into the lava below.
 9. Wait for the animation of the 1st stage to finish. Hammer the Drillbot until it's invulnerable.
-10. Run to the 2nd platform.
+10. Run and jump to the 2nd platform (it's possible to die here).
 11. Wait for the animation of the 2nd stage to finish. Hammer the Drillbot until it's invulnerable.
-12. Run to the 3rd platform.
+12. Run and jump to the 3rd platform (it's possible to die here).
 13. Wait for the animation of the 3rd stage to finish. Hammer the Drillbot until it's invulnerable.
-14. Run to the last, smaller platform. Hammer the Drillbot again.
+14. Run and jump to the last, smaller platform (it's possible to die here). Hammer the Drillbot again.
 15. The sequence is finished, and the rest of the Gyro-Core quest can be finished.
