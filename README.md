@@ -19,4 +19,4 @@ Skip most of the Drillbot boss train fight while keeping other parts of the ques
 12. Run to the 3rd platform.
 13. Wait for the animation of the 3rd stage to finish. Hammer the Drillbot until it's invulnerable.
 14. Run to the last, smaller platform. Hammer the Drillbot again.
-15. The sequence is finished.
+15. The sequence is finished, and the rest of the Gyro-Core quest can be finished.
